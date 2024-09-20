@@ -30,7 +30,7 @@ apt-get -y install wget curl vim openssl git
 Now it's time to download a copy of this tutorial which contains the configuration files and templates that will be used build your Kubernetes cluster from the ground up. Clone the Kubernetes The Hard Way git repository using the `git` command:
 
 ```bash
-git clone --depth 1 \
+git clone --branch youtube-tutorial --depth 1 \
   https://github.com/aghilish/kubernetes-the-hard-way.git
 ```
 
