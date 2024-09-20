@@ -1,0 +1,27 @@
+#debian-cloud-init.yaml
+package_update: true
+packages:
+  - debootstrap
+users:
+  - name: root
+    lock_passwd: false
+    passwd: 123
+ssh_pwauth: true
+disable_root: false
+runcmd:
+  - debootstrap --arch=arm64 bookworm /mnt http://deb.debian.org/debian/
+  - mount --bind /dev /mnt/dev
+  - mount --bind /proc /mnt/proc
+  - mount --bind /sys /mnt/sys
+  - chroot /mnt /bin/bash -c "apt-get update && apt-get install -y linux-image-arm64 systemd-sysv"
+  - chroot /mnt /bin/bash -c "apt-get install -y grub-efi"
+  - chroot /mnt /bin/bash -c "grub-install --target=arm64-efi --efi-directory=/boot/efi --bootloader-id=debian --recheck"
+  - chroot /mnt /bin/bash -c "update-grub"
+  - chroot /mnt /bin/bash -c "echo 'deb http://deb.debian.org/debian/ bookworm main' > /etc/apt/sources.list"
+  - chroot /mnt /bin/bash -c "echo 'root:password' | chpasswd"
+  - chroot /mnt /bin/bash -c "sed -i 's/^#PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config"
+  - chroot /mnt /bin/bash -c "systemctl enable ssh"
+  - umount /mnt/dev
+  - umount /mnt/proc
+  - umount /mnt/sys
+  - echo "Debian installation completed!"

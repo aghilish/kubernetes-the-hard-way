@@ -51,7 +51,7 @@ sed -i \
 Restart the `sshd` SSH server to pick up the updated configuration file:
 
 ```bash
-systemctl restart sshd
+systemctl restart ssh.service  
 ```
 
 ### Generate and Distribute SSH Keys
